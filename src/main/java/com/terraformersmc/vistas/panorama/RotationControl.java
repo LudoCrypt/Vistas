@@ -2,6 +2,7 @@ package com.terraformersmc.vistas.panorama;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.client.MinecraftClient;
 
 import java.util.Optional;
 
@@ -86,16 +87,25 @@ public class RotationControl {
 		return speedMultiplier;
 	}
 
+	public double getSpeed() {
+		MinecraftClient client = MinecraftClient.getInstance();
+		if (client == null) {
+			return this.getSpeedMultiplier();
+		}
+
+		return client.options.getPanoramaSpeed().getValue() * this.getSpeedMultiplier();
+	}
+
 	public double getPitch(double time) {
-		return ((this.isWoozy() ? -time * 0.1D : Math.sin(time * 0.001D) * 5.0D + 25.0D) + this.getAddedPitch()) * this.getSpeedMultiplier();
+		return ((this.isWoozy() ? -time * 0.1D : Math.sin(time * 0.001D) * 5.0D + 25.0D) + this.getAddedPitch()) * this.getSpeed();
 	}
 
 	public double getYaw(double time) {
-		return ((-time * 0.1D) + this.getAddedYaw()) * this.getSpeedMultiplier();
+		return ((-time * 0.1D) + this.getAddedYaw()) * this.getSpeed();
 	}
 
 	public double getRoll(double time) {
-		return (this.getAddedRoll()) * this.getSpeedMultiplier();
+		return (this.getAddedRoll()) * this.getSpeed();
 	}
 
 	@Override

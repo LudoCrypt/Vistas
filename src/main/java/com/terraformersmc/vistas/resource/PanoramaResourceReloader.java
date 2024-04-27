@@ -12,7 +12,7 @@ import com.terraformersmc.vistas.config.VistasConfig;
 import com.terraformersmc.vistas.panorama.Panorama;
 import com.terraformersmc.vistas.title.VistasTitle;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.Session;
+import net.minecraft.client.session.Session;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SinglePreparationResourceReloader;
@@ -47,7 +47,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 			profiler.push(namespace);
 			try {
 				for (Resource resource : manager.getAllResources(new Identifier(namespace, "panoramas.json"))) {
-					profiler.push(resource.getResourcePackName());
+					profiler.push(resource.getPackId());
 					try {
 						InputStream inputStream = resource.getInputStream();
 						try {
@@ -93,7 +93,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 						}
 						inputStream.close();
 					} catch (RuntimeException runtimeBreak) {
-						Vistas.LOGGER.warn("Invalid panoramas.json in resourcepack: '{}'", resource.getResourcePackName(), runtimeBreak);
+						Vistas.LOGGER.warn("Invalid panoramas.json in resourcepack: '{}'", resource.getPackId(), runtimeBreak);
 					}
 					profiler.pop();
 				}

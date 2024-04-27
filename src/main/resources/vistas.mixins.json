@@ -6,6 +6,7 @@
   "client": [
     "LogoDrawerMixin",
     "MinecraftClientMixin",
+    "ScreenMixin",
     "ScreenshotRecorderMixin",
     "SplashTextRendererMixin",
     "SplashTextResourceSupplierMixin",
@@ -13,5 +14,7 @@
   ],
   "injectors": {
     "defaultRequire": 1
-	}
+  },
+  "mixins": [
+  ]
 }
