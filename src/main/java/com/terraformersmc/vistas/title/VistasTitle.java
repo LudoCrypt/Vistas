@@ -33,7 +33,7 @@ public class VistasTitle {
 		if (VistasConfig.getInstance().forcePanorama) {
 			profiler.push("force");
 			try {
-				Panorama panorama = VistasTitle.PANORAMAS.get(new Identifier(VistasConfig.getInstance().panorama));
+				Panorama panorama = VistasTitle.PANORAMAS.get(Identifier.of(VistasConfig.getInstance().panorama));
 				if (panorama == null) {
 					throw new NullPointerException();
 				}

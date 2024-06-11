@@ -46,7 +46,7 @@ public class LogoControl {
 	private final boolean showEdition;
 
 	public LogoControl() {
-		this.logoId = new Identifier("textures/gui/title/minecraft.png");
+		this.logoId = Identifier.ofVanilla("textures/gui/title/minecraft.png");
 		this.logoX = 0.0D;
 		this.logoY = 0.0D;
 		this.logoRot = 0.0D;
@@ -74,7 +74,7 @@ public class LogoControl {
 
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	public LogoControl(Optional<Identifier> logoId, Optional<Double> logoX, Optional<Double> logoY, Optional<Double> logoRot, Optional<Boolean> outlined, Optional<Double> splashX, Optional<Double> splashY, Optional<Double> splashRot, Optional<Boolean> showEdition) {
-		this.logoId = logoId.orElse(new Identifier("textures/gui/title/minecraft.png"));
+		this.logoId = logoId.orElse(Identifier.ofVanilla("textures/gui/title/minecraft.png"));
 		this.logoX = logoX.orElse(0.0D);
 		this.logoY = logoY.orElse(0.0D);
 		this.logoRot = logoRot.orElse(0.0D);

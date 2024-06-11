@@ -22,7 +22,7 @@ public class VistasRotatingCubemapRenderer extends RotatingCubeMapRenderer {
 
 		VistasTitle.CURRENT.getValue().getCubemaps().forEach((cubemap) -> {
 			VistasCubemapRenderer panoramaRenderer = new VistasCubemapRenderer(cubemap);
-			Identifier overlayId = new Identifier(panoramaRenderer.getCubemap().getCubemapId() + "_overlay.png");
+			Identifier overlayId = panoramaRenderer.getCubemap().getCubemapId().withSuffixedPath("_overlay.png");
 
 			panoramaRenderer.draw(this.client, alpha);
 

@@ -25,6 +25,6 @@ public class Vistas implements ClientModInitializer {
 	}
 
 	public static Identifier id(String id) {
-		return new Identifier(NAMESPACE, id);
+		return Identifier.of(NAMESPACE, id);
 	}
 }

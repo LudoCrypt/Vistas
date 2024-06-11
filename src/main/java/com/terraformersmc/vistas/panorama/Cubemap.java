@@ -26,7 +26,7 @@ public class Cubemap {
 	private final VisualControl visualControl;
 
 	public Cubemap() {
-		this.cubemapId = new Identifier("textures/gui/title/background/panorama");
+		this.cubemapId = Identifier.ofVanilla("textures/gui/title/background/panorama");
 		this.rotationControl = RotationControl.DEFAULT;
 		this.visualControl = VisualControl.DEFAULT;
 	}
@@ -40,7 +40,7 @@ public class Cubemap {
 
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	public Cubemap(Optional<Identifier> cubemapId, Optional<RotationControl> rotationControl, Optional<VisualControl> visualControl) {
-		this.cubemapId = cubemapId.orElse(new Identifier("textures/gui/title/background/panorama"));
+		this.cubemapId = cubemapId.orElse(Identifier.ofVanilla("textures/gui/title/background/panorama"));
 		this.rotationControl = rotationControl.orElse(RotationControl.DEFAULT);
 		this.visualControl = visualControl.orElse(VisualControl.DEFAULT);
 	}

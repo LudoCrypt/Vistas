@@ -46,7 +46,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 		for (String namespace : manager.getAllNamespaces()) {
 			profiler.push(namespace);
 			try {
-				for (Resource resource : manager.getAllResources(new Identifier(namespace, "panoramas.json"))) {
+				for (Resource resource : manager.getAllResources(Identifier.of(namespace, "panoramas.json"))) {
 					profiler.push(resource.getPackId());
 					try {
 						InputStream inputStream = resource.getInputStream();
@@ -57,7 +57,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 
 								JsonElement jsonElement = JsonParser.parseReader(reader);
 								jsonElement.getAsJsonObject().entrySet().forEach((pair) -> {
-									Identifier panoramaId = new Identifier(namespace, pair.getKey());
+									Identifier panoramaId = Identifier.of(namespace, pair.getKey());
 									Panorama panorama = get(Panorama.CODEC, pair.getValue());
 									if (panorama != null) {
 										panoramas.put(panoramaId, panorama);
@@ -126,7 +126,7 @@ public class PanoramaResourceReloader extends SinglePreparationResourceReloader<
 				splashTexts = Lists.newArrayList(bufferedReader.lines().map(String::trim).map((splash) -> {
 					if (splash.startsWith("$vistas$import$")) {
 						try {
-							imports.add(new Identifier(splash.substring(15)));
+							imports.add(Identifier.of(splash.substring(15)));
 						} catch (InvalidIdentifierException badId) {
 							Vistas.LOGGER.error("Splash: '{}' imports invalid Identifier: '{}'", splashId, splash.substring(15));
 						}

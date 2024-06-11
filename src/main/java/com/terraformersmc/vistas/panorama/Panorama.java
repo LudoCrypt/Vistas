@@ -3,9 +3,9 @@ package com.terraformersmc.vistas.panorama;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.sound.MusicType;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.MusicSound;
+import net.minecraft.sound.MusicType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
@@ -54,7 +54,7 @@ public class Panorama {
 	public Panorama() {
 		this.weight = 1;
 		this.musicSound = MusicType.MENU;
-		this.splashText = new Identifier("texts/splashes.txt");
+		this.splashText = Identifier.ofVanilla("texts/splashes.txt");
 		this.logoControl = LogoControl.DEFAULT;
 		this.cubemaps = Lists.newArrayList(Cubemap.DEFAULT);
 	}
@@ -72,7 +72,7 @@ public class Panorama {
 	public Panorama(Optional<Integer> weight, Optional<MusicSound> musicSound, Optional<Identifier> splashText, Optional<LogoControl> logoControl, Optional<List<Cubemap>> cubemaps) {
 		this.weight = weight.orElse(1);
 		this.musicSound = musicSound.orElse(MusicType.MENU);
-		this.splashText = splashText.orElse(new Identifier("texts/splashes.txt"));
+		this.splashText = splashText.orElse(Identifier.ofVanilla("texts/splashes.txt"));
 		this.logoControl = logoControl.orElse(LogoControl.DEFAULT);
 		this.cubemaps = cubemaps.orElse(Lists.newArrayList(Cubemap.DEFAULT));
 	}

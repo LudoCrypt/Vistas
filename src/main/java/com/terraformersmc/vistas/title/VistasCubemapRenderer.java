@@ -21,7 +21,7 @@ public class VistasCubemapRenderer {
 	public VistasCubemapRenderer(Cubemap cubemap) {
 		Identifier faces = cubemap.getCubemapId();
 		for (int face = 0; face < FACES_COUNT; ++face) {
-			this.faces[face] = faces.withPath(faces.getPath() + "_" + face + ".png");
+			this.faces[face] = faces.withSuffixedPath("_" + face + ".png");
 		}
 
 		this.cubemap = cubemap;
@@ -29,8 +29,6 @@ public class VistasCubemapRenderer {
 
 	public void draw(MinecraftClient client, float alpha) {
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferBuilder = tessellator.getBuffer();
-
 		Matrix4f matrix4f = new Matrix4f().setPerspective((float) Math.toRadians(this.cubemap.getVisualControl().getFov()), (float) client.getWindow().getFramebufferWidth() / (float) client.getWindow().getFramebufferHeight(), 0.05F, 100.0F);
 		RenderSystem.backupProjectionMatrix();
 		RenderSystem.setProjectionMatrix(matrix4f, VertexSorter.BY_DISTANCE);
@@ -47,9 +45,9 @@ public class VistasCubemapRenderer {
 		int b = Math.round((float) this.cubemap.getVisualControl().getColorB());
 		int a = Math.round((float) this.cubemap.getVisualControl().getColorA() * alpha);
 
-		double w = this.cubemap.getVisualControl().getWidth() / 2.0D;
-		double h = this.cubemap.getVisualControl().getHeight() / 2.0D;
-		double d = this.cubemap.getVisualControl().getDepth() / 2.0D;
+		float w = (float) this.cubemap.getVisualControl().getWidth() / 2.0f;
+		float h = (float) this.cubemap.getVisualControl().getHeight() / 2.0f;
+		float d = (float) this.cubemap.getVisualControl().getDepth() / 2.0f;
 
 		matrixStack.pushMatrix();
 		matrixStack.translate((float) this.cubemap.getVisualControl().getAddedX(), (float) this.cubemap.getVisualControl().getAddedY(), (float) this.cubemap.getVisualControl().getAddedZ());
@@ -60,51 +58,51 @@ public class VistasCubemapRenderer {
 
 		for (int n = 0; n < 6; ++n) {
 			RenderSystem.setShaderTexture(0, this.faces[n]);
-			bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
+			BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
 
 			if (n == 0) {
-				bufferBuilder.vertex(-w, -h, d).texture(0.0F, 0.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(-w, h, d).texture(0.0F, 1.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(w, h, d).texture(1.0F, 1.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(w, -h, d).texture(1.0F, 0.0F).color(r, g, b, a).next();
+				bufferBuilder.vertex(-w, -h, d).texture(0.0F, 0.0F).color(r, g, b, a);
+				bufferBuilder.vertex(-w, h, d).texture(0.0F, 1.0F).color(r, g, b, a);
+				bufferBuilder.vertex(w, h, d).texture(1.0F, 1.0F).color(r, g, b, a);
+				bufferBuilder.vertex(w, -h, d).texture(1.0F, 0.0F).color(r, g, b, a);
 			}
 
 			if (n == 1) {
-				bufferBuilder.vertex(w, -h, d).texture(0.0F, 0.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(w, h, d).texture(0.0F, 1.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(w, h, -d).texture(1.0F, 1.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(w, -h, -d).texture(1.0F, 0.0F).color(r, g, b, a).next();
+				bufferBuilder.vertex(w, -h, d).texture(0.0F, 0.0F).color(r, g, b, a);
+				bufferBuilder.vertex(w, h, d).texture(0.0F, 1.0F).color(r, g, b, a);
+				bufferBuilder.vertex(w, h, -d).texture(1.0F, 1.0F).color(r, g, b, a);
+				bufferBuilder.vertex(w, -h, -d).texture(1.0F, 0.0F).color(r, g, b, a);
 			}
 
 			if (n == 2) {
-				bufferBuilder.vertex(w, -h, -d).texture(0.0F, 0.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(w, h, -d).texture(0.0F, 1.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(-w, h, -d).texture(1.0F, 1.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(-w, -h, -d).texture(1.0F, 0.0F).color(r, g, b, a).next();
+				bufferBuilder.vertex(w, -h, -d).texture(0.0F, 0.0F).color(r, g, b, a);
+				bufferBuilder.vertex(w, h, -d).texture(0.0F, 1.0F).color(r, g, b, a);
+				bufferBuilder.vertex(-w, h, -d).texture(1.0F, 1.0F).color(r, g, b, a);
+				bufferBuilder.vertex(-w, -h, -d).texture(1.0F, 0.0F).color(r, g, b, a);
 			}
 
 			if (n == 3) {
-				bufferBuilder.vertex(-w, -h, -d).texture(0.0F, 0.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(-w, h, -d).texture(0.0F, 1.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(-w, h, d).texture(1.0F, 1.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(-w, -h, d).texture(1.0F, 0.0F).color(r, g, b, a).next();
+				bufferBuilder.vertex(-w, -h, -d).texture(0.0F, 0.0F).color(r, g, b, a);
+				bufferBuilder.vertex(-w, h, -d).texture(0.0F, 1.0F).color(r, g, b, a);
+				bufferBuilder.vertex(-w, h, d).texture(1.0F, 1.0F).color(r, g, b, a);
+				bufferBuilder.vertex(-w, -h, d).texture(1.0F, 0.0F).color(r, g, b, a);
 			}
 
 			if (n == 4) {
-				bufferBuilder.vertex(-w, -h, -d).texture(0.0F, 0.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(-w, -h, d).texture(0.0F, 1.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(w, -h, d).texture(1.0F, 1.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(w, -h, -d).texture(1.0F, 0.0F).color(r, g, b, a).next();
+				bufferBuilder.vertex(-w, -h, -d).texture(0.0F, 0.0F).color(r, g, b, a);
+				bufferBuilder.vertex(-w, -h, d).texture(0.0F, 1.0F).color(r, g, b, a);
+				bufferBuilder.vertex(w, -h, d).texture(1.0F, 1.0F).color(r, g, b, a);
+				bufferBuilder.vertex(w, -h, -d).texture(1.0F, 0.0F).color(r, g, b, a);
 			}
 
 			if (n == 5) {
-				bufferBuilder.vertex(-w, h, d).texture(0.0F, 0.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(-w, h, -d).texture(0.0F, 1.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(w, h, -d).texture(1.0F, 1.0F).color(r, g, b, a).next();
-				bufferBuilder.vertex(w, h, d).texture(1.0F, 0.0F).color(r, g, b, a).next();
+				bufferBuilder.vertex(-w, h, d).texture(0.0F, 0.0F).color(r, g, b, a);
+				bufferBuilder.vertex(-w, h, -d).texture(0.0F, 1.0F).color(r, g, b, a);
+				bufferBuilder.vertex(w, h, -d).texture(1.0F, 1.0F).color(r, g, b, a);
+				bufferBuilder.vertex(w, h, d).texture(1.0F, 0.0F).color(r, g, b, a);
 			}
 
-			tessellator.draw();
+			BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
 		}
 
 		matrixStack.popMatrix();
