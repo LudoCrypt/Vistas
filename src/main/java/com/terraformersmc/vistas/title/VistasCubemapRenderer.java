@@ -1,15 +1,19 @@
 package com.terraformersmc.vistas.title;
 
+import com.mojang.blaze3d.systems.ProjectionType;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.systems.VertexSorter;
 import com.terraformersmc.vistas.panorama.Cubemap;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.render.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
 
+@Environment(EnvType.CLIENT)
 public class VistasCubemapRenderer {
 	protected static double time = 0.0D;
 
@@ -31,11 +35,11 @@ public class VistasCubemapRenderer {
 		Tessellator tessellator = Tessellator.getInstance();
 		Matrix4f matrix4f = new Matrix4f().setPerspective((float) Math.toRadians(this.cubemap.getVisualControl().getFov()), (float) client.getWindow().getFramebufferWidth() / (float) client.getWindow().getFramebufferHeight(), 0.05F, 100.0F);
 		RenderSystem.backupProjectionMatrix();
-		RenderSystem.setProjectionMatrix(matrix4f, VertexSorter.BY_DISTANCE);
+		RenderSystem.setProjectionMatrix(matrix4f, ProjectionType.PERSPECTIVE);
 		Matrix4fStack matrixStack = RenderSystem.getModelViewStack();
 		matrixStack.pushMatrix();
 		matrixStack.rotationX((float) Math.PI);
-		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
+		RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
 		RenderSystem.enableBlend();
 		RenderSystem.disableCull();
 		RenderSystem.depthMask(false);
@@ -54,7 +58,6 @@ public class VistasCubemapRenderer {
 		matrixStack.rotate(RotationAxis.POSITIVE_X.rotationDegrees((float) this.cubemap.getRotationControl().getPitch(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
 		matrixStack.rotate(RotationAxis.POSITIVE_Y.rotationDegrees((float) this.cubemap.getRotationControl().getYaw(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
 		matrixStack.rotate(RotationAxis.POSITIVE_Z.rotationDegrees((float) this.cubemap.getRotationControl().getRoll(cubemap.getRotationControl().isFrozen() ? 0.0D : time)));
-		RenderSystem.applyModelViewMatrix();
 
 		for (int n = 0; n < 6; ++n) {
 			RenderSystem.setShaderTexture(0, this.faces[n]);
@@ -106,12 +109,10 @@ public class VistasCubemapRenderer {
 		}
 
 		matrixStack.popMatrix();
-		RenderSystem.applyModelViewMatrix();
 
 		RenderSystem.colorMask(true, true, true, true);
 		RenderSystem.restoreProjectionMatrix();
 		matrixStack.popMatrix();
-		RenderSystem.applyModelViewMatrix();
 		RenderSystem.depthMask(true);
 		RenderSystem.enableCull();
 		RenderSystem.enableDepthTest();

@@ -5,10 +5,12 @@ import com.google.common.collect.Maps;
 import com.terraformersmc.vistas.Vistas;
 import com.terraformersmc.vistas.config.VistasConfig;
 import com.terraformersmc.vistas.panorama.Panorama;
-import net.minecraft.client.MinecraftClient;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.profiler.Profiler;
+import net.minecraft.util.profiler.Profilers;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.Collections;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentMap;
 
+@Environment(EnvType.CLIENT)
 public class VistasTitle {
 	public static final ConcurrentMap<Identifier, Panorama> BUILTIN_PANORAMAS = Maps.newConcurrentMap();
 	public static final ConcurrentMap<Identifier, Panorama> PANORAMAS = Maps.newConcurrentMap();
@@ -24,7 +27,7 @@ public class VistasTitle {
 	public static final MutableObject<Panorama> CURRENT = new MutableObject<>(Panorama.DEFAULT);
 
 	public static void choose() {
-		choose(MinecraftClient.getInstance().getProfiler());
+		choose(Profilers.get());
 	}
 
 	public static void choose(Profiler profiler) {

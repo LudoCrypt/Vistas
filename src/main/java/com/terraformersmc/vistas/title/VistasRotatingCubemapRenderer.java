@@ -1,12 +1,16 @@
 package com.terraformersmc.vistas.title;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.CubeMapRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.RotatingCubeMapRenderer;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.ColorHelper;
 
+@Environment(EnvType.CLIENT)
 public class VistasRotatingCubemapRenderer extends RotatingCubeMapRenderer {
 	private final MinecraftClient client;
 
@@ -24,14 +28,12 @@ public class VistasRotatingCubemapRenderer extends RotatingCubeMapRenderer {
 			VistasCubemapRenderer panoramaRenderer = new VistasCubemapRenderer(cubemap);
 			Identifier overlayId = panoramaRenderer.getCubemap().getCubemapId().withSuffixedPath("_overlay.png");
 
+			context.draw();
 			panoramaRenderer.draw(this.client, alpha);
 
 			if (this.client.getResourceManager().getResource(overlayId).isPresent()) {
-				RenderSystem.enableBlend();
-				context.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
-				context.drawTexture(overlayId, 0, 0, width, height, 0.0f, 0.0f, 16, 128, 16, 128);
-				context.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-				RenderSystem.disableBlend();
+				context.draw();
+				context.drawTexture(RenderLayer::getGuiTextured, overlayId, 0, 0, 0.0f, 0.0f, width, height, 16, 128, 16, 128, ColorHelper.getWhite(alpha));
 			}
 		});
 	}

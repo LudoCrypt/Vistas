@@ -13,6 +13,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.LogoDrawer;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
@@ -23,6 +24,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LogoDrawer.class)
@@ -38,12 +40,12 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
             method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V",
+                    target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIIII)V",
                     ordinal = 0
             )
     )
     @SuppressWarnings("unused")
-    private void vistas$render$drawOutline(DrawContext instance, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, Operation<Void> operation, DrawContext context, int screenWidth) {
+    private void vistas$render$drawOutline(DrawContext instance, Function<Identifier, RenderLayer> renderLayers, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color, Operation<Void> operation, DrawContext context, int screenWidth) {
         Panorama panorama = VistasTitle.CURRENT.getValue();
         LogoControl logo = panorama.getLogoControl();
         MatrixStack matrices = context.getMatrices();
@@ -61,7 +63,7 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
             int rx = (screenWidth / 2) - 256;
             int ry = 52 - 256;
 
-            BiConsumer<Integer, Integer> render = (ix, iy) -> context.drawTexture(logoTexture, ix, iy, 0, 0, 0, 512, 512, 512, 512);
+            BiConsumer<Integer, Integer> render = (ix, iy) -> context.drawTexture(renderLayers, logoTexture, ix, iy, 0, 0, 0, 512, 512, 512, 512);
 
             if (logo.isOutlined()) {
                 vistas$drawWithOutline(rx, ry, render);
@@ -69,9 +71,9 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
                 render.accept(rx, ry);
             }
 
-            operation.call(instance, logoTexture, rx, ry, 0, 0, 512, 512, 512, 512, 512);
+            operation.call(instance, renderLayers, logoTexture, rx, ry, 0, 0, 512, 512, 512, 512, 512, color);
         } else {
-            BiConsumer<Integer, Integer> render = (ix, iy) -> context.drawTexture(logo.getLogoId(), ix, iy, u, v, width, height, textureWidth, textureHeight);
+            BiConsumer<Integer, Integer> render = (ix, iy) -> context.drawTexture(renderLayers, logo.getLogoId(), ix, iy, u, v, width, height, textureWidth, textureHeight);
 
             if (logo.isOutlined()) {
                 vistas$drawWithOutline(x, y, render);
@@ -79,7 +81,7 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
                 render.accept(x, y);
             }
 
-            operation.call(instance, logo.getLogoId(), x, y, u, v, width, height, textureWidth, textureHeight);
+            operation.call(instance, renderLayers, logo.getLogoId(), x, y, u, v, width, height, textureWidth, textureHeight, color);
         }
 
         matrices.pop();
@@ -89,12 +91,12 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
             method = "draw(Lnet/minecraft/client/gui/DrawContext;IFI)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIFFIIII)V",
+                    target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIIII)V",
                     ordinal = 1
             )
     )
     @SuppressWarnings("unused")
-    private void vistas$render(DrawContext instance, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, Operation<Void> operation, DrawContext context, int screenWidth) {
+    private void vistas$render(DrawContext instance, Function<Identifier, RenderLayer> renderLayers, Identifier texture, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color, Operation<Void> operation, DrawContext context, int screenWidth) {
         Panorama panorama = VistasTitle.CURRENT.getValue();
         LogoControl logo = panorama.getLogoControl();
         MatrixStack matrices = context.getMatrices();
@@ -111,7 +113,7 @@ public abstract class LogoDrawerMixin implements LogoDrawerAccessor {
         matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees((float) logo.getLogoRot()));
         matrices.translate(-(screenWidth / 2.0D), -45, 0.0D);
 
-        operation.call(instance, texture, x, y, u, v, width, height, textureWidth, textureHeight);
+        operation.call(instance, renderLayers, texture, x, y, u, v, width, height, textureWidth, textureHeight, color);
 
         matrices.pop();
     }
